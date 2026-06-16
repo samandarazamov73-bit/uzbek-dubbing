@@ -1,0 +1,53 @@
+# ===========================
+# WEB SERVER
+# ===========================
+fastapi==0.111.0
+uvicorn[standard]==0.29.0
+python-multipart==0.0.9
+
+# ===========================
+# AI — SPEECH RECOGNITION
+# ===========================
+openai-whisper==20231117
+torch>=2.0.0
+torchaudio>=2.0.0
+
+# ===========================
+# AI — TRANSLATION
+# ===========================
+transformers==4.40.0
+sentencepiece==0.2.0
+sacremoses==0.1.1
+argostranslate==1.9.6
+
+# ===========================
+# AI — TEXT TO SPEECH
+# ===========================
+TTS==0.22.0
+gtts==2.5.1
+
+# ===========================
+# AUDIO PROCESSING
+# ===========================
+librosa==0.10.1
+soundfile==0.12.1
+numpy==1.26.4
+scipy==1.13.0
+
+# ===========================
+# VIDEO PROCESSING
+# ===========================
+# ffmpeg — system package (apt install ffmpeg)
+# Wav2Lip — alohida o'rnatiladi (README ga qarang)
+
+# ===========================
+# SPEAKER DIARIZATION (ixtiyoriy)
+# ===========================
+pyannote.audio==3.1.1
+
+# ===========================
+# UTILS
+# ===========================
+python-dotenv==1.0.1
+aiofiles==23.2.1
+httpx==0.27.0

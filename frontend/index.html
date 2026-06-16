@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UzDub — AI Video Dubbing</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">🎬 UzDub</div>
+    <nav>
+      <a href="#how">Qanday ishlaydi?</a>
+      <a href="#upload" class="btn-nav">Boshlash</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="badge">🤖 AI bilan ishlaydi</div>
+      <h1>Inglizcha videoni <span class="gradient">o'zbekchaga</span> dublyaj qiling</h1>
+      <p>Videodagi har bir ovozni alohida tanib, tabiiy ovoz bilan tarjima qiladi. Erkak va ayol ovozlari alohida.</p>
+      <a href="#upload" class="btn-primary">Videoni yuklash →</a>
+    </div>
+    <div class="hero-visual">
+      <div class="visual-card">
+        <div class="visual-flag">🇺🇸 → 🇺🇿</div>
+        <div class="visual-wave">
+          <span></span><span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div class="visual-text">Ovoz klonlash + Lip Sync</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how" id="how">
+    <h2>Qanday ishlaydi?</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-icon">📤</div>
+        <h3>Video yuklang</h3>
+        <p>Inglizcha video faylini yuklang (MP4, MOV, AVI)</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-icon">🧠</div>
+        <h3>AI tahlil qiladi</h3>
+        <p>Har bir ovozni alohida taniydi — erkak, ayol, bir nechta kishi</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-icon">🎙️</div>
+        <h3>Dublyaj qiladi</h3>
+        <p>Intonatsiya va hissiyotlarni saqlagan holda o'zbekchaga tarjima qiladi</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-icon">⬇️</div>
+        <h3>Yuklab olish</h3>
+        <p>Tayyor videoni yuklab oling — lip sync bilan!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- UPLOAD SECTION -->
+  <section class="upload-section" id="upload">
+    <div class="upload-container">
+      <h2>Videoni yuklang</h2>
+      <p class="upload-subtitle">Maksimal hajm: 500MB • Format: MP4, MOV, AVI, MKV</p>
+
+      <!-- UPLOAD BOX -->
+      <div class="upload-box" id="uploadBox">
+        <div class="upload-icon">🎬</div>
+        <p class="upload-main">Video faylni bu yerga tashlang</p>
+        <p class="upload-or">yoki</p>
+        <label for="fileInput" class="btn-upload">Faylni tanlang</label>
+        <input type="file" id="fileInput" accept="video/*" hidden />
+      </div>
+
+      <!-- FILE SELECTED -->
+      <div class="file-selected" id="fileSelected" style="display:none;">
+        <div class="file-info">
+          <span class="file-icon">🎥</span>
+          <div>
+            <div class="file-name" id="fileName">video.mp4</div>
+            <div class="file-size" id="fileSize">0 MB</div>
+          </div>
+          <button class="file-remove" id="fileRemove">✕</button>
+        </div>
+      </div>
+
+      <!-- OPTIONS -->
+      <div class="options" id="options" style="display:none;">
+        <div class="option-group">
+          <label>Manba tili</label>
+          <select id="sourceLang">
+            <option value="en">🇺🇸 Inglizcha</option>
+            <option value="ru">🇷🇺 Ruscha</option>
+            <option value="ko">🇰🇷 Koreyscha</option>
+            <option value="zh">🇨🇳 Xitoycha</option>
+          </select>
+        </div>
+        <div class="option-group">
+          <label>Maqsad tili</label>
+          <select id="targetLang">
+            <option value="uz">🇺🇿 O'zbekcha</option>
+          </select>
+        </div>
+        <div class="option-group">
+          <label>Lip Sync</label>
+          <select id="lipSync">
+            <option value="true">✅ Ha (tavsiya etiladi)</option>
+            <option value="false">❌ Yo'q (tezroq)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- SUBMIT BUTTON -->
+      <button class="btn-primary btn-submit" id="submitBtn" style="display:none;">
+        🚀 Dublyaj boshlash
+      </button>
+
+      <!-- PROGRESS -->
+      <div class="progress-section" id="progressSection" style="display:none;">
+        <div class="progress-steps">
+          <div class="progress-step" id="step-upload">
+            <div class="progress-step-icon">📤</div>
+            <div class="progress-step-label">Yuklanmoqda</div>
+          </div>
+          <div class="progress-step" id="step-transcribe">
+            <div class="progress-step-icon">👂</div>
+            <div class="progress-step-label">Ovoz tanilmoqda</div>
+          </div>
+          <div class="progress-step" id="step-translate">
+            <div class="progress-step-icon">🌐</div>
+            <div class="progress-step-label">Tarjima qilinmoqda</div>
+          </div>
+          <div class="progress-step" id="step-tts">
+            <div class="progress-step-icon">🎙️</div>
+            <div class="progress-step-label">Ovoz yaratilmoqda</div>
+          </div>
+          <div class="progress-step" id="step-lipsync">
+            <div class="progress-step-icon">🎬</div>
+            <div class="progress-step-label">Lip Sync</div>
+          </div>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="progress-text" id="progressText">Tayyorlanmoqda...</div>
+      </div>
+
+      <!-- RESULT -->
+      <div class="result-section" id="resultSection" style="display:none;">
+        <div class="result-icon">🎉</div>
+        <h3>Dublyaj tayyor!</h3>
+        <video id="resultVideo" controls></video>
+        <a class="btn-primary btn-download" id="downloadBtn" download="uzbek-dubbed.mp4">
+          ⬇️ Yuklab olish
+        </a>
+        <button class="btn-secondary" id="newVideoBtn">🔄 Yangi video</button>
+      </div>
+
+      <!-- ERROR -->
+      <div class="error-section" id="errorSection" style="display:none;">
+        <div class="error-icon">❌</div>
+        <p id="errorText">Xatolik yuz berdi</p>
+        <button class="btn-secondary" id="retryBtn">🔄 Qayta urinish</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-logo">🎬 UzDub</div>
+      <p>O'zbekiston uchun AI dublyaj xizmati</p>
+      <p class="footer-small">Powered by Whisper • Fish Speech • Wav2Lip</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

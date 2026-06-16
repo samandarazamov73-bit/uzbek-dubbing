@@ -1,0 +1,38 @@
+# ===========================
+# NETLIFY CONFIG
+# ===========================
+[build]
+  # Frontend papkasini publish qilish
+  publish = "frontend"
+
+# ===========================
+# REDIRECTS
+# ===========================
+# API so'rovlarini Hugging Face ga yo'naltirish
+[[redirects]]
+  from = "/api/*"
+  to = "https://samandarazamov73-bit-uzbek-dubbing.hf.space/:splat"
+  status = 200
+  force = true
+
+# SPA uchun — barcha yo'llar index.html ga
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# ===========================
+# HEADERS
+# ===========================
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/outputs/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
