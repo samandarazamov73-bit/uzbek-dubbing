@@ -1,8 +1,8 @@
 // ===========================
 // CONFIG
 // ===========================
-// Hugging Face Space URL ga o'zgartiring:
-const API_URL = 'https://samandarazamov73-bit-uzbek-dubbing.hf.space';
+// HuggingFace Space URL — Jarwys/uzbek-dubbing
+const API_URL = 'https://jarwys-uzbek-dubbing.hf.space';
 
 // ===========================
 // STATE

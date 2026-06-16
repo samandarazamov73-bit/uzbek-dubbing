@@ -5,10 +5,8 @@ from pathlib import Path
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse
 from contextlib import asynccontextmanager
-
-from dubbing import DubbingPipeline
 
 # ===========================
 # DIRS
@@ -41,34 +39,50 @@ app = FastAPI(
 )
 
 # ===========================
-# CORS — Netlify uchun
+# CORS — Netlify + HuggingFace uchun
 # ===========================
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Production da netlify URL ni yozing
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # ===========================
-# STATIC FILES (natijalar)
+# STATIC FILES
 # ===========================
 app.mount("/outputs", StaticFiles(directory="outputs"), name="outputs")
+app.mount("/static", StaticFiles(directory="frontend"), name="frontend")
 
 # ===========================
 # ROUTES
 # ===========================
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 async def root():
-    return {"message": "UzDub API ishlayapti!", "version": "1.0.0"}
+    """Frontend saitni ko'rsatish"""
+    index_path = Path("frontend/index.html")
+    if index_path.exists():
+        return HTMLResponse(content=index_path.read_text(encoding="utf-8"))
+    return HTMLResponse(content="<h1>🎬 UzDub API ishlayapti!</h1><p>Version: 1.0.0</p>")
 
 @app.get("/health")
 async def health():
-    return {"status": "ok"}
+    return {"status": "ok", "message": "UzDub API ishlayapti!"}
 
+@app.get("/api/info")
+async def info():
+    return {
+        "name": "UzDub",
+        "version": "1.0.0",
+        "description": "English → Uzbek AI Video Dubbing",
+        "features": ["whisper", "translation", "tts", "lipsync"]
+    }
 
+# ===========================
+# DUB ENDPOINT
+# ===========================
 @app.post("/dub")
 async def start_dubbing(
     background_tasks: BackgroundTasks,
@@ -80,15 +94,24 @@ async def start_dubbing(
     """Video yuklash va dublyaj ishini boshlash"""
 
     # Fayl tekshirish
-    allowed_types = ["video/mp4", "video/quicktime", "video/x-msvideo", "video/x-matroska", "video/webm"]
+    allowed_types = [
+        "video/mp4", "video/quicktime",
+        "video/x-msvideo", "video/x-matroska", "video/webm"
+    ]
     if video.content_type not in allowed_types:
-        raise HTTPException(status_code=400, detail="Faqat video fayllar qabul qilinadi")
+        raise HTTPException(
+            status_code=400,
+            detail="Faqat video fayllar qabul qilinadi (MP4, MOV, AVI, MKV, WEBM)"
+        )
 
     # Hajm tekshirish (500MB)
     max_size = 500 * 1024 * 1024
     content = await video.read()
     if len(content) > max_size:
-        raise HTTPException(status_code=400, detail="Fayl hajmi 500MB dan oshmasligi kerak")
+        raise HTTPException(
+            status_code=400,
+            detail="Fayl hajmi 500MB dan oshmasligi kerak"
+        )
 
     # Job ID yaratish
     job_id = str(uuid.uuid4())
@@ -99,7 +122,7 @@ async def start_dubbing(
     with open(input_path, "wb") as f:
         f.write(content)
 
-    # Job holatini boshlang'ich qilib belgilash
+    # Job boshlang'ich holati
     jobs[job_id] = {
         "status": "processing",
         "step": "transcribing",
@@ -120,23 +143,25 @@ async def start_dubbing(
 
     return {"job_id": job_id, "message": "Dublyaj boshlandi"}
 
-
+# ===========================
+# STATUS ENDPOINT
+# ===========================
 @app.get("/status/{job_id}")
 async def get_status(job_id: str):
     """Job holatini tekshirish"""
     if job_id not in jobs:
         raise HTTPException(status_code=404, detail="Job topilmadi")
-
     return jobs[job_id]
 
-
+# ===========================
+# DELETE ENDPOINT
+# ===========================
 @app.delete("/job/{job_id}")
 async def delete_job(job_id: str):
     """Job va fayllarni o'chirish"""
     if job_id not in jobs:
         raise HTTPException(status_code=404, detail="Job topilmadi")
 
-    # Fayllarni o'chirish
     for f in UPLOAD_DIR.glob(f"{job_id}*"):
         f.unlink(missing_ok=True)
     for f in OUTPUT_DIR.glob(f"{job_id}*"):
@@ -144,7 +169,6 @@ async def delete_job(job_id: str):
 
     del jobs[job_id]
     return {"message": "O'chirildi"}
-
 
 # ===========================
 # BACKGROUND TASK
@@ -157,6 +181,7 @@ async def run_dubbing_pipeline(
     lip_sync: bool,
 ):
     """AI dublyaj pipeline ni background da ishlatish"""
+    from backend.dubbing import DubbingPipeline
 
     pipeline = DubbingPipeline(job_id=job_id, jobs=jobs)
 
@@ -171,7 +196,6 @@ async def run_dubbing_pipeline(
             lip_sync=lip_sync,
         )
 
-        # Muvaffaqiyatli yakunlandi
         jobs[job_id].update({
             "status": "done",
             "step": "done",
@@ -188,7 +212,6 @@ async def run_dubbing_pipeline(
         })
 
     finally:
-        # Input faylni o'chirish (joy tejash)
         try:
             Path(input_path).unlink(missing_ok=True)
         except Exception:

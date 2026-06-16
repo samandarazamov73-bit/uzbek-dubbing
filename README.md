@@ -1,3 +1,13 @@
+---
+title: UzDub
+emoji: 🎬
+colorFrom: purple
+colorTo: cyan
+sdk: docker
+pinned: false
+app_port: 7860
+---
+
 # 🎬 UzDub — AI Video Dubbing
 
 Inglizcha videoni o'zbekchaga AI bilan dublyaj qiluvchi platforma.
@@ -21,34 +31,6 @@ Frontend (Netlify)  →  Backend (Hugging Face Spaces)
                     Fish Speech (TTS)
                               ↓
                     Wav2Lip (lip sync)
-```
-
-## 🚀 O'rnatish
-
-### Frontend (Netlify)
-1. GitHub reponi Netlify ga ulang
-2. Build settings: `publish = frontend`
-3. Deploy!
-
-### Backend (Hugging Face Spaces)
-1. huggingface.co da Space yarating
-2. `backend/` papkasini yuklang
-3. Secrets ga `HF_TOKEN` qo'shing
-
-## 📁 Fayl tuzilmasi
-
-```
-uzbek-dubbing/
-├── frontend/
-│   ├── index.html
-│   ├── style.css
-│   └── script.js
-├── backend/
-│   ├── main.py
-│   ├── dubbing.py
-│   └── requirements.txt
-├── netlify.toml
-└── README.md
 ```
 
 ## 🔧 Texnologiyalar
